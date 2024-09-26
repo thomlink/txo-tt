@@ -1,0 +1,42 @@
+Please can you create an HTTP server that serves these requests:
+1. POST /create/<id>/<starting number> - creates a new machine identified by "id",
+and the starting point "starting number". This machine will start running on the server,
+in background, and update its internal state (a number) by the rules defined by Collatz conjecture
+(https://en.wikipedia.org/wiki/Collatz_conjecture), one update per each second. Once the machine
+reaches 1, the operation will restart from the "start" value. 2. POST /destroy/<id> - destroys the
+running machine 3. GET /messages/<id> - the response is an infinite stream using Server-Sent-Events
+protocol (https://en.wikipedia.org/wiki/Server-sent_events), returns all changes in the machine as a
+new SSE message (sequence number + state). 4. GET /messages - the response is an infinite stream using
+Server-Sent-Events protocol, returns all changes in all machines as a new SSE message (machine id and
+sequence with state). 5. POST /increment/<id>/<amount> - increment the given machine by "amount", all
+streams that are currently reading from that machine will immediately start sending incremented values
+and continue using the normal rules for changes. The expected result able to run as a docker image.
+
+
+The conjecture asks whether repeating two simple arithmetic operations will eventually transform
+every positive integer into 1. It concerns sequences of integers in which each term is obtained
+from the previous term as follows: if the previous term is even, the next term is one half of the
+previous term. If the previous term is odd, the next term is 3 times the previous term plus 1.
+The conjecture is that these sequences always reach 1, no matter which positive integer is chosen
+to start the sequence.
+
+
+if (n % 2 == 0)
+    n / 2
+else
+    3 * n + 1
+
+
+
+Requests:
+
+POST /create/<id>/<starting number>
+POST /destroy/<id>
+
+GET /messages
+    - Response:
+    - SSE stream of all changes in all machines
+
+POST /increment/<id>/<amount>
+
+
